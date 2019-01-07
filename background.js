@@ -1,10 +1,16 @@
 // Called when the user clicks on the browser action.
 chrome.browserAction.onClicked.addListener(function(tab) {
+  var url = tab.url;
   // Send a message to the active tab
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    var activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {"message": "clicked_browser_action", "originalTabId": activeTab.id});
+  chrome.windows.create({
+      url: "http://fakespot.com/analyze?url=" + encodeURI(url),
+      type: 'popup',
+      focused: true,
+      width: 400,
+      height: 500
   });
+
+  chrome.storage.local.set({'fsProductUrl': url});
 });
 
 // This block is new!
